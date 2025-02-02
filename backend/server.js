@@ -3,37 +3,46 @@ require('dotenv').config();
 
 // 2. Import necessary packages
 const express = require('express');
-
-const mongoose = require('mongoose');
+const cors = require('cors');
+const connectDB = require('./config/db');
+const Symptom = require('./models/Symptom');
 
 // 3. Create the Express app
 const app = express();
 
-// 4. Middleware, routes, and other configurations can go here
-// For example, middleware for handling JSON requests
+// 4. Middleware
 app.use(express.json()); // For parsing application/json
+app.use(cors()); // Enable CORS
 
-// 5. Connect to MongoDB using the MONGO_URI from the .env file
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch(err => console.log('MongoDB connection error: ', err));
+// 5. Connect to MongoDB
+connectDB();
 
-// 6. Set up your server to listen on a port
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-const cors = require('cors');
-app.use(cors());
-// Example route
+// 6. Define Routes
+// Root Route
 app.get("/", (req, res) => {
   res.send("Hello from MindScape!");
 });
 
-// Add additional routes as necessary
-app.get('/api/status', (req, res) => {
-  res.json({ message: "MindScape API is running!" });
-});
+// API Health Check
 app.get('/api/health', (req, res) => {
   res.json({ status: "Server is healthy!", timestamp: new Date() });
 });
+
+// API Status Check
+app.get('/api/status', (req, res) => {
+  res.json({ message: "MindScape API is running!" });
+});
+
+// API route to fetch symptoms
+app.get('/symptoms', async (req, res) => {
+  try {
+    const symptoms = await Symptom.find();
+    res.json(symptoms);
+  } catch (err) {
+    res.status(500).json({ error: "Error fetching symptoms" });
+  }
+});
+
+// 7. Start the server
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
