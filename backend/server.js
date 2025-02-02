@@ -3,6 +3,7 @@ require('dotenv').config();
 
 // 2. Import necessary packages
 const express = require('express');
+
 const mongoose = require('mongoose');
 
 // 3. Create the Express app
@@ -32,4 +33,7 @@ app.get("/", (req, res) => {
 // Add additional routes as necessary
 app.get('/api/status', (req, res) => {
   res.json({ message: "MindScape API is running!" });
+});
+app.get('/api/health', (req, res) => {
+  res.json({ status: "Server is healthy!", timestamp: new Date() });
 });
