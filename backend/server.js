@@ -42,7 +42,23 @@ app.get('/symptoms', async (req, res) => {
     res.status(500).json({ error: "Error fetching symptoms" });
   }
 });
+// Add a POST route to receive selected symptoms
+app.post('/api/symptoms', async (req, res) => {
+  try {
+    const { symptoms } = req.body; // Expecting an array of selected symptoms
+    if (!symptoms || symptoms.length === 0) {
+      return res.status(400).json({ message: "No symptoms provided" });
+    }
+
+    console.log("Received symptoms:", symptoms); // Log to check if the data is received
+
+    // Process the symptoms (e.g., store them, match with conditions, etc.)
+    res.json({ message: "Symptoms received successfully", symptoms });
+  } catch (err) {
+    res.status(500).json({ error: "Error processing symptoms" });
+  }
+});
 
 // 7. Start the server
-const PORT = process.env.PORT || 5002;
+const PORT = process.env.PORT || 5006;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

@@ -5,10 +5,21 @@ function Symptoms() {
   const [symptoms, setSymptoms] = useState([]);
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [filter, setFilter] = useState('All');
+  const [statusMessage, setStatusMessage] = useState('');
 
   useEffect(() => {
+    // API request to the backend
+    axios.get('http://localhost:5006/api/status')  // This should match your backend's API URL
+      .then(response => {
+        setStatusMessage(response.data.message);  // Display the status message from backend
+      })
+      .catch(error => {
+        console.error('Error fetching status: ', error);
+        setStatusMessage("Failed to connect to backend");
+      });
+
     // Fetch symptoms from the backend
-    axios.get('http://localhost:5001/symptoms')
+    axios.get('http://localhost:5006/symptoms')
       .then(response => {
         setSymptoms(response.data);
       })
@@ -31,7 +42,7 @@ function Symptoms() {
 
   const handleSubmit = () => {
     console.log('Selected Symptoms:', selectedSymptoms);
-    axios.post('http://localhost:5001/api/symptoms', { symptoms: selectedSymptoms })
+    axios.post('http://localhost:5006/api/symptoms', { symptoms: selectedSymptoms })
       .then(response => {
         console.log('Symptoms submitted:', response.data);
       })
@@ -45,7 +56,6 @@ function Symptoms() {
   return (
     <div>
       <h2>Symptoms</h2>
-
       <div className="filter-section">
         <label>Filter by Category:</label>
         <select value={filter} onChange={handleFilterChange}>
@@ -59,7 +69,6 @@ function Symptoms() {
           <option value="mental">Mental</option>
         </select>
       </div>
-
       {filteredSymptoms.map(symptom => (
         <div key={symptom._id} className="symptom-item">
           <label>
@@ -76,4 +85,16 @@ function Symptoms() {
   );
 }
 
-export default Symptoms;
+function App() {
+  const [statusMessage, setStatusMessage] = useState('');
+
+  return (
+    <div className="App">
+      <h1>MindScape</h1>
+      <p>{statusMessage}</p>
+      <Symptoms />
+    </div>
+  );
+}
+
+export default App;

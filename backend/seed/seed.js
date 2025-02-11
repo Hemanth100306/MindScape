@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Symptom = require('../models/Symptom');
+const Symptom = require('../models/Symptom'); // Correct relative path
 require('dotenv').config();
 
 const symptomsList = [
