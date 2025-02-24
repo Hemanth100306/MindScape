@@ -1,71 +1,133 @@
 /* App.css */
 .App {
   text-align: center;
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   background-color: #f4f4f9;
   padding: 20px;
+  min-height: 100vh;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Header */
+.App-header {
+  background-color: #4caf50;
+  color: white;
+  padding: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* Headings */
 h1 {
   color: #4caf50;
+  font-size: 28px;
+  font-weight: bold;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
 h2 {
   margin-top: 20px;
   color: #333;
+  font-size: 24px;
+  font-weight: 600;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-}
-.symptom-item {
-  background-color: white;
-  padding: 10px;
-  border-radius: 5px;
-  margin: 10px 0;
+/* Filter Section */
+.filter-section {
+  margin: 20px auto;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  justify-content: space-between;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+.filter-section label {
+  font-weight: 600;
+  margin-right: 10px;
+  color: #333;
+}
+
+.filter-section select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.filter-section select:hover {
+  border-color: #4caf50;
+}
+
+/* Symptom Item */
+.symptom-item {
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 500;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.symptom-item:hover {
+  transform: scale(1.02);
+}
+
+.symptom-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+}
+
+/* Submit Button */
 button {
   margin-top: 20px;
-  padding: 10px 20px;
+  padding: 12px 25px;
   background-color: #4caf50;
   border: none;
   border-radius: 5px;
   color: white;
+  font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
+button:hover {
+  background-color: #388e3c;
+  transform: scale(1.05);
+}
+
+/* Links */
 .App-link {
   color: #61dafb;
-}
-button:hover {
-  background-color: #45a049;
+  text-decoration: none;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.App-link:hover {
+  text-decoration: underline;
 }
-input[type="checkbox"] {
-  margin-right: 10px;
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .filter-section {
+    flex-direction: column;
+  }
+
+  .filter-section select {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .symptom-item {
+    font-size: 16px;
+    flex-direction: column;
+    text-align: center;
+  }
 }

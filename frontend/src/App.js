@@ -5,26 +5,15 @@ function Symptoms() {
   const [symptoms, setSymptoms] = useState([]);
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [filter, setFilter] = useState('All');
-  const [statusMessage, setStatusMessage] = useState('');
 
   useEffect(() => {
-    // API request to the backend
-    axios.get('http://localhost:5006/api/status')  // This should match your backend's API URL
-      .then(response => {
-        setStatusMessage(response.data.message);  // Display the status message from backend
-      })
-      .catch(error => {
-        console.error('Error fetching status: ', error);
-        setStatusMessage("Failed to connect to backend");
-      });
-
     // Fetch symptoms from the backend
-    axios.get('http://localhost:5006/symptoms')
+    axios.get('http://localhost:5004/symptoms') // Corrected endpoint
       .then(response => {
-        setSymptoms(response.data);
+        setSymptoms(response.data); // Set the fetched symptoms to state
       })
       .catch(error => {
-        console.error('Error fetching symptoms: ', error);
+        console.error(error);
       });
   }, []);
 
@@ -42,20 +31,25 @@ function Symptoms() {
 
   const handleSubmit = () => {
     console.log('Selected Symptoms:', selectedSymptoms);
-    axios.post('http://localhost:5006/api/symptoms', { symptoms: selectedSymptoms })
+    axios.post('http://localhost:5004/symptoms', { symptoms: selectedSymptoms }) // ✅ Correct endpoint
       .then(response => {
         console.log('Symptoms submitted:', response.data);
+        // Optional: Redirect after successful submission
+        window.location.href = "/results"; 
       })
       .catch(error => {
         console.error('Error submitting symptoms:', error);
       });
-  };
+};
 
+
+  // Filter symptoms based on selected category
   const filteredSymptoms = filter === 'All' ? symptoms : symptoms.filter(symptom => symptom.category === filter);
 
   return (
     <div>
       <h2>Symptoms</h2>
+
       <div className="filter-section">
         <label>Filter by Category:</label>
         <select value={filter} onChange={handleFilterChange}>
@@ -69,32 +63,26 @@ function Symptoms() {
           <option value="mental">Mental</option>
         </select>
       </div>
-      {filteredSymptoms.map(symptom => (
-        <div key={symptom._id} className="symptom-item">
-          <label>
-            <input
-              type="checkbox"
-              onChange={(event) => handleCheckboxChange(event, symptom)}
-            />
-            {symptom.name} - {symptom.category}
-          </label>
-        </div>
-      ))}
+
+      {filteredSymptoms.length > 0 ? (
+        filteredSymptoms.map(symptom => (
+          <div key={symptom._id} className="symptom-item">
+            <label>
+              <input
+                type="checkbox"
+                onChange={(event) => handleCheckboxChange(event, symptom)}
+              />
+              {symptom.name} - {symptom.category}
+            </label>
+          </div>
+        ))
+      ) : (
+        <p>No symptoms available</p>
+      )}
+      
       <button onClick={handleSubmit}>Submit Symptoms</button>
     </div>
   );
 }
 
-function App() {
-  const [statusMessage, setStatusMessage] = useState('');
-
-  return (
-    <div className="App">
-      <h1>MindScape</h1>
-      <p>{statusMessage}</p>
-      <Symptoms />
-    </div>
-  );
-}
-
-export default App;
+export default Symptoms;

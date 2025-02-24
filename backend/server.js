@@ -1,64 +1,56 @@
-// 1. Load environment variables from .env file
+const express = require('express');
+const mongoose = require('mongoose');
+const Symptom = require('./models/Symptom'); // Make sure this is the correct path
 require('dotenv').config();
 
-// 2. Import necessary packages
-const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/db');
-const Symptom = require('./models/Symptom');
-
-// 3. Create the Express app
 const app = express();
+const port = 5004; // Use your correct port number
+const cors = require('cors');
+app.use(cors());
+const symptomRoutes = require('./routes/symptomRoutes');
+app.use('/symptoms', symptomRoutes);
 
-// 4. Middleware
-app.use(express.json()); // For parsing application/json
-app.use(cors()); // Enable CORS
+// Middleware to parse JSON requests
+app.use(express.json());
+const chatbotRoutes = require("./routes/chatbotRoutes");
+app.use("/api/chatbot", chatbotRoutes);
 
-// 5. Connect to MongoDB
-connectDB();
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('MongoDB connected successfully');
+  })
+  .catch(err => {
+    console.error('Error connecting to MongoDB:', err);
+  });
 
-// 6. Define Routes
-// Root Route
-app.get("/", (req, res) => {
-  res.send("Hello from MindScape!");
-});
-
-// API Health Check
-app.get('/api/health', (req, res) => {
-  res.json({ status: "Server is healthy!", timestamp: new Date() });
-});
-
-// API Status Check
-app.get('/api/status', (req, res) => {
-  res.json({ message: "MindScape API is running!" });
-});
-
-// API route to fetch symptoms
+// Route to get symptoms from the database
 app.get('/symptoms', async (req, res) => {
   try {
+    // Fetch symptoms from the database
     const symptoms = await Symptom.find();
-    res.json(symptoms);
-  } catch (err) {
-    res.status(500).json({ error: "Error fetching symptoms" });
-  }
-});
-// Add a POST route to receive selected symptoms
-app.post('/api/symptoms', async (req, res) => {
-  try {
-    const { symptoms } = req.body; // Expecting an array of selected symptoms
-    if (!symptoms || symptoms.length === 0) {
-      return res.status(400).json({ message: "No symptoms provided" });
+    
+    // If no symptoms found, send an error
+    if (!symptoms) {
+      return res.status(404).json({ message: 'No symptoms found' });
     }
 
-    console.log("Received symptoms:", symptoms); // Log to check if the data is received
-
-    // Process the symptoms (e.g., store them, match with conditions, etc.)
-    res.json({ message: "Symptoms received successfully", symptoms });
+    // Return the symptoms as JSON
+    res.json(symptoms);
   } catch (err) {
-    res.status(500).json({ error: "Error processing symptoms" });
+    console.error('Error fetching symptoms:', err);
+    res.status(500).json({ message: 'Server Error' });
   }
 });
 
-// 7. Start the server
-const PORT = process.env.PORT || 5006;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+// Route to submit symptoms
+app.post('/submit-symptoms', (req, res) => {
+  const { symptoms } = req.body;
+  console.log('Symptoms submitted:', symptoms);
+  res.status(200).json({ message: 'Symptoms submitted successfully' });
+});
+
+// Server listening on the specified port
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
