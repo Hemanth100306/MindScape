@@ -1,0 +1,133 @@
+/* App.css */
+.App {
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f4f9;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* Header */
+.App-header {
+  background-color: #4caf50;
+  color: white;
+  padding: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Headings */
+h1 {
+  color: #4caf50;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+h2 {
+  margin-top: 20px;
+  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Filter Section */
+.filter-section {
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-section label {
+  font-weight: 600;
+  margin-right: 10px;
+  color: #333;
+}
+
+.filter-section select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.filter-section select:hover {
+  border-color: #4caf50;
+}
+
+/* Symptom Item */
+.symptom-item {
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 500;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.symptom-item:hover {
+  transform: scale(1.02);
+}
+
+.symptom-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+}
+
+/* Submit Button */
+button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #388e3c;
+  transform: scale(1.05);
+}
+
+/* Links */
+.App-link {
+  color: #61dafb;
+  text-decoration: none;
+}
+
+.App-link:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .filter-section {
+    flex-direction: column;
+  }
+
+  .filter-section select {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .symptom-item {
+    font-size: 16px;
+    flex-direction: column;
+    text-align: center;
+  }
+}
