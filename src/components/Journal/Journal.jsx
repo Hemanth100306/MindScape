@@ -1,216 +1,165 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Typography,
+  TextField,
+  Button,
   Card,
   CardContent,
   Grid,
-  TextField,
-  Button,
-  Box,
   IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Snackbar,
-  Alert,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 const Journal = () => {
-  const [entries, setEntries] = useState(() => {
-    const savedEntries = localStorage.getItem('journalEntries');
-    return savedEntries ? JSON.parse(savedEntries) : [];
-  });
+  const [entries, setEntries] = useState([]);
+  const [newEntry, setNewEntry] = useState('');
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [editingEntry, setEditingEntry] = useState(null);
+  const [editIndex, setEditIndex] = useState(-1);
   const [openDialog, setOpenDialog] = useState(false);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [editEntry, setEditEntry] = useState({ title: '', content: '' });
 
-  useEffect(() => {
-    localStorage.setItem('journalEntries', JSON.stringify(entries));
-  }, [entries]);
-
-  const showNotification = (message, severity = 'success') => {
-    setSnackbar({ open: true, message, severity });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (title.trim() && newEntry.trim()) {
+      setEntries([...entries, { title, content: newEntry, date: new Date().toLocaleString() }]);
+      setTitle('');
+      setNewEntry('');
+    }
   };
 
-  const handleSubmit = () => {
-    if (!title.trim() || !content.trim()) return;
-
-    const newEntry = {
-      id: Date.now(),
-      title,
-      content,
-      date: new Date().toLocaleString(),
-    };
-
-    setEntries([newEntry, ...entries]);
-    setTitle('');
-    setContent('');
-    showNotification('Journal entry saved successfully!');
+  const handleDelete = (index) => {
+    const newEntries = entries.filter((_, i) => i !== index);
+    setEntries(newEntries);
   };
 
-  const handleEdit = (entry) => {
-    setEditingEntry(entry);
-    setTitle(entry.title);
-    setContent(entry.content);
+  const handleEdit = (index) => {
+    setEditIndex(index);
+    setEditEntry({
+      title: entries[index].title,
+      content: entries[index].content,
+    });
     setOpenDialog(true);
   };
 
   const handleSaveEdit = () => {
-    if (!title.trim() || !content.trim()) return;
-
-    setEntries(entries.map((entry) =>
-      entry.id === editingEntry.id
-        ? { ...entry, title, content }
-        : entry
-    ));
-
-    setOpenDialog(false);
-    setTitle('');
-    setContent('');
-    setEditingEntry(null);
-    showNotification('Journal entry updated successfully!');
-  };
-
-  const handleDelete = (id) => {
-    setEntries(entries.filter((entry) => entry.id !== id));
-    showNotification('Journal entry deleted successfully!', 'info');
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
+    if (editEntry.title.trim() && editEntry.content.trim()) {
+      const newEntries = [...entries];
+      newEntries[editIndex] = {
+        ...newEntries[editIndex],
+        title: editEntry.title,
+        content: editEntry.content,
+      };
+      setEntries(newEntries);
+      setOpenDialog(false);
+    }
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom align="center">
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
         Journal
       </Typography>
 
       <Card sx={{ mb: 4 }}>
         <CardContent>
-          <TextField
-            id="journal-title"
-            name="journal-title"
-            fullWidth
-            label="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            id="journal-content"
-            name="journal-content"
-            fullWidth
-            multiline
-            rows={6}
-            label="Write your thoughts..."
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <Button
-            variant="contained"
-            onClick={handleSubmit}
-            fullWidth
-            disabled={!title.trim() || !content.trim()}
-          >
-            Save Entry
-          </Button>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              label="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              margin="normal"
+              required
+            />
+            <TextField
+              fullWidth
+              label="Write your thoughts..."
+              multiline
+              rows={4}
+              value={newEntry}
+              onChange={(e) => setNewEntry(e.target.value)}
+              margin="normal"
+              required
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2 }}
+            >
+              Save Entry
+            </Button>
+          </form>
         </CardContent>
       </Card>
 
-      <Typography variant="h5" gutterBottom>
-        Previous Entries
-      </Typography>
-
       <Grid container spacing={3}>
-        {entries.map((entry) => (
-          <Grid item xs={12} key={entry.id}>
+        {entries.map((entry, index) => (
+          <Grid item xs={12} key={index}>
             <Card>
               <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                  <Typography variant="h6">{entry.title}</Typography>
-                  <Box>
-                    <IconButton
-                      size="small"
-                      onClick={() => handleEdit(entry)}
-                      sx={{ mr: 1 }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      onClick={() => handleDelete(entry.id)}
-                      color="error"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Box>
-                </Box>
-                <Typography color="textSecondary" sx={{ mb: 2 }}>
+                <Typography variant="h6" gutterBottom>
+                  {entry.title}
+                </Typography>
+                <Typography color="textSecondary" gutterBottom>
                   {entry.date}
                 </Typography>
-                <Typography
-                  sx={{
-                    whiteSpace: 'pre-wrap',
-                    overflowWrap: 'break-word',
-                  }}
-                >
+                <Typography variant="body1" paragraph>
                   {entry.content}
                 </Typography>
+                <IconButton
+                  onClick={() => handleEdit(index)}
+                  color="primary"
+                  size="small"
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  onClick={() => handleDelete(index)}
+                  color="error"
+                  size="small"
+                >
+                  <DeleteIcon />
+                </IconButton>
               </CardContent>
             </Card>
           </Grid>
         ))}
       </Grid>
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="md" fullWidth>
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Edit Journal Entry</DialogTitle>
         <DialogContent>
           <TextField
-            id="edit-journal-title"
-            name="edit-journal-title"
             fullWidth
             label="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            sx={{ mt: 2, mb: 2 }}
+            value={editEntry.title}
+            onChange={(e) => setEditEntry({ ...editEntry, title: e.target.value })}
+            margin="normal"
           />
           <TextField
-            id="edit-journal-content"
-            name="edit-journal-content"
             fullWidth
-            multiline
-            rows={6}
             label="Content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            multiline
+            rows={4}
+            value={editEntry.content}
+            onChange={(e) => setEditEntry({ ...editEntry, content: e.target.value })}
+            margin="normal"
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-          <Button onClick={handleSaveEdit} variant="contained">
+          <Button onClick={handleSaveEdit} color="primary">
             Save Changes
           </Button>
         </DialogActions>
       </Dialog>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Container>
   );
 };

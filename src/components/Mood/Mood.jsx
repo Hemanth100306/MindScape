@@ -2,189 +2,94 @@ import React, { useState } from 'react';
 import {
   Container,
   Typography,
+  Grid,
   Card,
   CardContent,
-  Grid,
-  Button,
+  IconButton,
   Box,
-  Rating,
-  TextField,
-  Chip,
+  Paper,
+  Tooltip,
 } from '@mui/material';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import SentimentNeutralIcon from '@mui/icons-material/SentimentNeutral';
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 
-const customIcons = {
-  1: {
-    icon: <SentimentVeryDissatisfiedIcon />,
-    label: 'Very Sad',
-  },
-  2: {
-    icon: <SentimentDissatisfiedIcon />,
-    label: 'Sad',
-  },
-  3: {
-    icon: <SentimentSatisfiedIcon />,
-    label: 'Neutral',
-  },
-  4: {
-    icon: <SentimentSatisfiedAltIcon />,
-    label: 'Happy',
-  },
-  5: {
-    icon: <SentimentVerySatisfiedIcon />,
-    label: 'Very Happy',
-  },
-};
-
-const moodTags = [
-  'Anxious',
-  'Calm',
-  'Tired',
-  'Energetic',
-  'Stressed',
-  'Relaxed',
-  'Motivated',
-  'Unmotivated',
-  'Focused',
-  'Distracted',
+const moods = [
+  { icon: SentimentVeryDissatisfiedIcon, label: 'Very Sad', color: '#d32f2f' },
+  { icon: SentimentDissatisfiedIcon, label: 'Sad', color: '#f57c00' },
+  { icon: SentimentNeutralIcon, label: 'Neutral', color: '#ffd700' },
+  { icon: SentimentSatisfiedIcon, label: 'Happy', color: '#4caf50' },
+  { icon: SentimentVerySatisfiedIcon, label: 'Very Happy', color: '#2196f3' },
 ];
 
 const Mood = () => {
-  const [moodRating, setMoodRating] = useState(3);
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [notes, setNotes] = useState('');
-  const [entries, setEntries] = useState([]);
+  const [moodHistory, setMoodHistory] = useState([]);
 
-  const handleTagClick = (tag) => {
-    setSelectedTags((prev) =>
-      prev.includes(tag)
-        ? prev.filter((t) => t !== tag)
-        : [...prev, tag]
-    );
-  };
-
-  const handleSubmit = () => {
-    const newEntry = {
-      date: new Date().toLocaleString(),
-      rating: moodRating,
-      tags: [...selectedTags],
-      notes,
+  const handleMoodSelect = (mood) => {
+    const newMoodEntry = {
+      mood: mood,
+      timestamp: new Date().toLocaleString(),
     };
-
-    setEntries([newEntry, ...entries]);
-    setSelectedTags([]);
-    setNotes('');
-    setMoodRating(3);
+    setMoodHistory([newMoodEntry, ...moodHistory]);
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom align="center">
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
         Mood Tracker
       </Typography>
 
-      <Card sx={{ mb: 4 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            How are you feeling today?
-          </Typography>
+      <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
+        <Typography variant="h6" gutterBottom>
+          How are you feeling today?
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+          {moods.map((mood) => (
+            <Tooltip title={mood.label} key={mood.label}>
+              <IconButton
+                onClick={() => handleMoodSelect(mood)}
+                sx={{
+                  '&:hover': {
+                    backgroundColor: `${mood.color}22`,
+                  },
+                }}
+              >
+                <mood.icon
+                  sx={{
+                    fontSize: 40,
+                    color: mood.color,
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
+          ))}
+        </Box>
+      </Paper>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-            <Rating
-              id="mood-rating-input"
-              name="mood-rating"
-              value={moodRating}
-              onChange={(event, newValue) => {
-                setMoodRating(newValue);
-              }}
-              max={5}
-              icon={customIcons[5].icon}
-              emptyIcon={customIcons[5].icon}
-              sx={{ fontSize: '2rem' }}
-            />
-            <Typography sx={{ ml: 2 }}>
-              {customIcons[moodRating]?.label}
-            </Typography>
-          </Box>
-
-          <Typography variant="h6" gutterBottom>
-            Select mood tags:
-          </Typography>
-          <Box sx={{ mb: 3 }}>
-            {moodTags.map((tag) => (
-              <Chip
-                key={tag}
-                label={tag}
-                onClick={() => handleTagClick(tag)}
-                color={selectedTags.includes(tag) ? 'primary' : 'default'}
-                sx={{ m: 0.5 }}
-              />
-            ))}
-          </Box>
-
-          <TextField
-            id="mood-notes"
-            name="mood-notes"
-            fullWidth
-            multiline
-            rows={4}
-            label="Notes (optional)"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            sx={{ mb: 3 }}
-          />
-
-          <Button
-            variant="contained"
-            onClick={handleSubmit}
-            fullWidth
-          >
-            Save Entry
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Typography variant="h5" gutterBottom>
-        Recent Entries
+      <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
+        Mood History
       </Typography>
-
       <Grid container spacing={3}>
-        {entries.map((entry, index) => (
-          <Grid item xs={12} key={index}>
+        {moodHistory.map((entry, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
             <Card>
               <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                  <Typography color="textSecondary">
-                    {entry.date}
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    {customIcons[entry.rating].icon}
-                    <Typography sx={{ ml: 1 }}>
-                      {customIcons[entry.rating].label}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <entry.mood.icon
+                    sx={{
+                      fontSize: 30,
+                      color: entry.mood.color,
+                    }}
+                  />
+                  <Box>
+                    <Typography variant="h6">{entry.mood.label}</Typography>
+                    <Typography color="textSecondary" variant="body2">
+                      {entry.timestamp}
                     </Typography>
                   </Box>
                 </Box>
-
-                <Box sx={{ mb: 2 }}>
-                  {entry.tags.map((tag) => (
-                    <Chip
-                      key={tag}
-                      label={tag}
-                      size="small"
-                      sx={{ m: 0.5 }}
-                    />
-                  ))}
-                </Box>
-
-                {entry.notes && (
-                  <Typography variant="body2">
-                    {entry.notes}
-                  </Typography>
-                )}
               </CardContent>
             </Card>
           </Grid>
