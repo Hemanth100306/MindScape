@@ -5,6 +5,7 @@ import BookIcon from '@mui/icons-material/Book';
 import MoodIcon from '@mui/icons-material/Mood';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import ChatIcon from '@mui/icons-material/Chat';
+import { keyframes } from '@emotion/react';
 
 const features = [
   {
@@ -20,35 +21,92 @@ const features = [
     path: '/mood'
   },
   {
-    title: 'Symptoms Checker',
-    description: 'Monitor your mental health symptoms',
+    title: 'Mental Health Assessment',
+    description: 'Assess your mental health status',
     icon: <HealthAndSafetyIcon sx={{ fontSize: 40 }} />,
     path: '/symptoms'
   },
   {
-    title: 'Chat Support',
-    description: 'Get help and support through chat',
+    title: 'Mental Health Resources',
+    description: 'Browse helpful mental health resources',
     icon: <ChatIcon sx={{ fontSize: 40 }} />,
-    path: '/chat'
+    path: '/resources'
+  },
+  {
+    title: 'Remedies',
+    description: 'Find mental health remedies and suggestions',
+    icon: <HealthAndSafetyIcon sx={{ fontSize: 40 }} />,
+    path: '/remedies'
   }
 ];
+
+const pulse = keyframes`
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+`;
 
 const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Typography variant="h3" component="h1" gutterBottom align="center">
+    <Container maxWidth="lg" sx={{ 
+      mt: 4,
+      background: theme => theme.palette.mode === 'light'
+        ? 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,249,250,0.9) 100%)'
+        : 'linear-gradient(135deg, rgba(30,30,30,0.9) 0%, rgba(18,18,18,0.9) 100%)',
+      borderRadius: 4,
+      p: 4,
+      boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+    }}>
+      <Typography 
+        variant="h3" 
+        component="h1" 
+        gutterBottom 
+        align="center"
+        sx={{
+          fontWeight: 'bold',
+          background: theme => theme.palette.mode === 'light'
+            ? 'linear-gradient(90deg, #ff6b6b, #48dbfb)'
+            : 'linear-gradient(90deg, #ff9e9e, #7ae1f9)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.1)'
+        }}
+      >
         Welcome to MindScape
       </Typography>
-      <Typography variant="h6" color="textSecondary" paragraph align="center" sx={{ mb: 6 }}>
+      <Typography 
+        variant="h6" 
+        paragraph 
+        align="center" 
+        sx={{ 
+          mb: 6,
+          color: 'text.primary',
+          fontStyle: 'italic'
+        }}
+      >
         Your personal mental health companion
       </Typography>
 
       <Grid container spacing={4}>
         {features.map((feature) => (
           <Grid item xs={12} sm={6} md={3} key={feature.title}>
-            <Card sx={{ height: '100%' }}>
+            <Card 
+              sx={{ 
+                height: '100%',
+                background: theme => theme.palette.mode === 'light'
+                  ? 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,249,250,0.95) 100%)'
+                  : 'linear-gradient(135deg, rgba(30,30,30,0.95) 0%, rgba(18,18,18,0.95) 100%)',
+                borderRadius: 4,
+                boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                transition: 'transform 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-5px)',
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.2)'
+                }
+              }}
+            >
               <CardActionArea
                 onClick={() => navigate(feature.path)}
                 sx={{ height: '100%' }}
@@ -58,7 +116,8 @@ const Home = () => {
                   flexDirection: 'column',
                   alignItems: 'center',
                   textAlign: 'center',
-                  p: 3
+                  p: 3,
+                  animation: `${pulse} 3s infinite ease-in-out`
                 }}>
                   {feature.icon}
                   <Typography variant="h6" component="h2" sx={{ mt: 2 }}>

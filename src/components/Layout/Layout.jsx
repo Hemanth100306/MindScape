@@ -21,18 +21,21 @@ import BookIcon from '@mui/icons-material/Book';
 import MoodIcon from '@mui/icons-material/Mood';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import ChatIcon from '@mui/icons-material/Chat';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 const drawerWidth = 240;
 
 const menuItems = [
-  { text: 'Home', path: '/', icon: <HomeIcon /> },
-  { text: 'Journal', path: '/journal', icon: <BookIcon /> },
-  { text: 'Mood Tracker', path: '/mood', icon: <MoodIcon /> },
-  { text: 'Symptoms', path: '/symptoms', icon: <HealthAndSafetyIcon /> },
-  { text: 'Chat', path: '/chat', icon: <ChatIcon /> },
+  { text: 'Home', path: '/', icon: <HomeIcon sx={{ color: 'primary.main' }} /> },
+  { text: 'Journal', path: '/journal', icon: <BookIcon sx={{ color: 'primary.main' }} /> },
+  { text: 'Mood Tracker', path: '/mood', icon: <MoodIcon sx={{ color: 'primary.main' }} /> },
+  { text: 'Mental Health Assessment', path: '/symptoms', icon: <HealthAndSafetyIcon sx={{ color: 'primary.main' }} /> },
+  { text: 'Mental Health Resources', path: '/resources', icon: <ChatIcon sx={{ color: 'primary.main' }} /> },
+  { text: 'Remedies', path: '/remedies', icon: <HealthAndSafetyIcon sx={{ color: 'primary.main' }} /> },
 ];
 
-const Layout = ({ children }) => {
+const Layout = ({ children, toggleColorMode }) => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const location = useLocation();
 
@@ -64,20 +67,40 @@ const Layout = ({ children }) => {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed">
+      <AppBar 
+        position="fixed"
+        sx={{
+          background: theme => theme.palette.mode === 'light' 
+            ? 'linear-gradient(90deg, rgba(255,107,107,1) 0%, rgba(72,219,251,1) 100%)' 
+            : 'linear-gradient(90deg, rgba(255,158,158,1) 0%, rgba(122,225,249,1) 100%)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+        }}
+      >
         <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2 }}
+            sx={{ mr: 2, color: 'text.primary' }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography 
+            variant="h6" 
+            noWrap 
+            component="div" 
+            sx={{ 
+              flexGrow: 1,
+              fontWeight: 'bold',
+              textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+            }}
+          >
             MindScape
           </Typography>
+          <IconButton color="inherit" onClick={toggleColorMode}>
+            {useTheme().palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Box component="nav">
@@ -93,6 +116,11 @@ const Layout = ({ children }) => {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
+              background: theme => theme.palette.mode === 'light'
+                ? 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(248,249,250,1) 100%)'
+                : 'linear-gradient(180deg, rgba(30,30,30,1) 0%, rgba(18,18,18,1) 100%)',
+              borderRight: 'none',
+              boxShadow: '4px 0 20px rgba(0,0,0,0.1)'
             },
           }}
         >
