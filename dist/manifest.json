@@ -1,0 +1,47 @@
+{
+    "name": "MindScape — Mental Health Companion",
+    "short_name": "MindScape",
+    "description": "Your personal AI-powered mental wellness companion. Track mood, journal thoughts, breathe, and chat with Mia.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#080b14",
+    "theme_color": "#8b5cf6",
+    "orientation": "any",
+    "categories": [
+        "health",
+        "lifestyle",
+        "productivity"
+    ],
+    "icons": [
+        {
+            "src": "/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [],
+    "shortcuts": [
+        {
+            "name": "Journal",
+            "url": "/journal",
+            "description": "Write a journal entry"
+        },
+        {
+            "name": "Mood",
+            "url": "/mood",
+            "description": "Log your mood"
+        },
+        {
+            "name": "Chat with Mia",
+            "url": "/chat",
+            "description": "Talk to your AI companion"
+        }
+    ]
+}
