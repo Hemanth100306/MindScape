@@ -1,0 +1,161 @@
+/* Register.module.css — supplemental styles on top of Login.module.css */
+
+/* ── Card shell (green-tinted gradient border) ── */
+.cardShell {
+    padding: 1.5px;
+    border-radius: 23px;
+    background: linear-gradient(145deg,
+            rgba(139, 92, 246, 0.3) 0%,
+            rgba(255, 255, 255, 0.05) 40%,
+            rgba(16, 185, 129, 0.28) 100%);
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.03),
+        0 28px 70px rgba(0, 0, 0, 0.5),
+        0 0 80px rgba(16, 185, 129, 0.05);
+}
+
+/* ── Hero text (left panel) ── */
+.heroText {
+    padding: 28px 30px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.heroEmoji {
+    font-size: 2.2rem;
+    line-height: 1;
+    margin-bottom: 14px;
+}
+
+.heroHeading {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #f0f2ff;
+    line-height: 1.4;
+    margin: 0 0 10px;
+}
+
+.heroSub {
+    font-size: 0.83rem;
+    color: rgba(139, 147, 181, 0.75);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ── Perks list ── */
+.perksList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.perkItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 13px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    transition: background 0.2s, transform 0.2s;
+    cursor: default;
+}
+
+.perkItem:hover {
+    background: rgba(16, 185, 129, 0.07);
+    border-color: rgba(16, 185, 129, 0.2);
+    transform: translateX(3px);
+}
+
+.perkIcon {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.perkText {
+    font-size: 0.81rem;
+    color: rgba(210, 215, 240, 0.8);
+    font-weight: 500;
+}
+
+/* ── Free badge ── */
+.freeBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: 99px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #6ee7b7;
+    letter-spacing: 0.02em;
+    align-self: flex-start;
+}
+
+.freeBadgeDot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
+    animation: freePing 2s ease-in-out infinite;
+}
+
+@keyframes freePing {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* ── Password strength ── */
+.strengthWrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding: 0 2px;
+}
+
+.strengthBars {
+    display: flex;
+    flex: 1;
+    gap: 5px;
+}
+
+.strengthBar {
+    flex: 1;
+    height: 3px;
+    border-radius: 99px;
+    transition: background 0.3s ease;
+}
+
+.strengthLabel {
+    font-size: 0.72rem;
+    font-weight: 700;
+    min-width: 52px;
+    text-align: right;
+    transition: color 0.3s;
+}
+
+/* ── Confirm icon ── */
+.confirmIcon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    transition: color 0.2s;
+}
